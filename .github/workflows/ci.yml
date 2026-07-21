@@ -67,6 +67,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install pip-tools
           pip install setuptools-rust
+          pip install scikit-build-core
 
       - name: Set up Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
