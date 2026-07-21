@@ -67,6 +67,7 @@ jobs:
   
       - name: Patch setup.py inside Subdirectory
         shell: powershell
+        if: false
         run: |
           # Point the path directly inside the checked-out folder
           $setupPath = "z3-source/src/api/python/setup.py"
