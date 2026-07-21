@@ -47,12 +47,17 @@ jobs:
           python-version: '3.14' # Or your target version
           architecture: 'arm64'   # Explicitly binds the execution layer to ARM64
       
-      - name: Install dependencies
-        run: pip install -r pyproject.toml --no-binary  pyvex
-
       - name: Print Out Python Version Diagnostics
         run: |
           python -c "import sys, platform; print(f'--- DIAGNOSTIC DATA ---\nVersion String: {sys.version}\nPlatform OS: {sys.platform}\nTarget Machine Architecture: {platform.machine()}\n-----------------------')"
+
+      - name: Install dependencies
+        run: | 
+          # 1. Compile a strict requirements block directly out of your TOML definitions
+          pip install tomli
+          python -c "import tomli; f=open('pyproject.toml', 'rb'); data=tomli.load(f); print('\n'.join(data['project']['dependencies']))" > temp_reqs.txt
+          # 2. Safely consume the isolated package dependencies
+          pip install -r temp_reqs.txt --no-binary pyvex --no-cache-dir
 
       - name: Compile and Build Package Wheels
         run: |
