@@ -23,7 +23,7 @@ dependencies = [
     "cachetools",
     "capstone==5.0.6",
     "cffi>=1.14.0",
-    "claripy==9.3.1.dev0",
+    "claripy>=9.3",
     "cle>=9.3",
     "lmdb==2.1.1",
     "msgspec; implementation_name == 'cpython'",
