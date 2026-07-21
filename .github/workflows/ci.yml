@@ -23,6 +23,8 @@ jobs:
         environment:
           - os: windows-2025
             python-version: 3.12
+          - os: windows-11-arm
+            python-version: 3.14
           - os: macos-26
             python-version: 3.12
           - os: ubuntu-24.04
@@ -38,6 +40,19 @@ jobs:
         run: uv sync -p ${{ matrix.environment.python-version }}
       - name: Collect tests
         run: uv run pytest --collect-only tests
+      
+      # 3. Build only the wheel distribution
+      - name: Build Wheel
+        run: uv build --wheel
+      
+      # 4. Collect and upload the built wheel artifact
+      - name: Upload Built Wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-wheel
+          path: dist/*.whl
+          if-no-files-found: error
+          retention-days: 7
 
   rust_check:
     name: Rust Check
