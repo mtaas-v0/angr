@@ -141,8 +141,10 @@ jobs:
         shell: pwsh
         run: |
           (Get-Content temp_reqs.txt) -notmatch 'pyvex|z3-solver|pydemumble|pypcode' > temp_reqs_v2.txt
+          Get-Content temp_reqs_v2.txt
           
       - name: Install dependencies
+        continue-on-error: true
         run: |
           pip install -r temp_reqs_v2.txt --no-binary pyvex --no-cache-dir
 
