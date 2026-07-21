@@ -37,6 +37,7 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
         if: startsWith(runner.os, 'windows')
       - name: Set up uv
+        if: false
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
@@ -54,6 +55,10 @@ jobs:
       # z3 build
       - name: Checkout Z3 Source Code into Subdirectory
         uses: actions/checkout@v4
+        env:
+          DISTUTILS_USE_SDK: 1
+          MSSdk: 1
+          setuptools_plat_name: "win_arm64"
         with:
           repository: Z3Prover/z3
           ref: master
