@@ -48,7 +48,7 @@ jobs:
           architecture: 'arm64'   # Explicitly binds the execution layer to ARM64
       
       - name: Install dependencies
-        run: pip install -r requirements.txt  --no-binary-package pyvex
+        run: pip install -r requirements.txt --no-binary  pyvex
 
       - name: Print Out Python Version Diagnostics
         run: |
