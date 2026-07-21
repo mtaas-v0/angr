@@ -94,6 +94,7 @@ jobs:
           MSSdk: 1
           setuptools_plat_name: "win_arm64"
         shell: cmd
+        if: false
         run: |
           :: 1. Force environment paths to utilize cross-compilation toolchains
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64_arm64
@@ -113,6 +114,7 @@ jobs:
       
       - name: Configure MSVC for Cross-Compilation & Build Wheel For pydemumble
         shell: cmd
+        if: false
         env:
           DISTUTILS_USE_SDK: 1
           MSSdk: 1
@@ -128,18 +130,26 @@ jobs:
           :: 3. Build the wheel directly from source into the 'dist' directory
           pip wheel --no-binary=z3-solver --wheel-dir=dist pydemumble
           
-      - name: Install dependencies
+      - name: Calcuate dependencies
         run: | 
           # 1. Compile a strict requirements block directly out of your TOML definitions
           pip install tomli
           python -c "import tomli; f=open('pyproject.toml', 'rb'); data=tomli.load(f); print('\n'.join(data['project']['dependencies']))" > temp_reqs.txt
           # 2. Safely consume the isolated package dependencies
-          pip install -r temp_reqs.txt --no-binary pyvex --no-cache-dir
+          
+      - name: Filter Packages
+        shell: pwsh
+        run: |
+          (Get-Content temp_reqs.txt) -notmatch 'pyvex|z3-solver|pydemumble|pypcode' > temp_reqs_v2.txt
+          
+      - name: Install dependencies
+        run: |
+          pip install -r temp_reqs_v2.txt --no-binary pyvex --no-cache-dir
 
       - name: Compile and Build Package Wheels
         run: |
           # Uses the modern PEP 517 build orchestrator to execute setup.py / pyproject.toml 
-          python -m build --wheel
+          python -m build --wheel --no-isolation
           
           # Optional Legacy fallback line if your repository has no pyproject.toml:
           # python setup.py bdist_wheel
