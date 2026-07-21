@@ -106,7 +106,7 @@ jobs:
           cd z3-source\src\api\python
           
           :: 4. Build the wheel and pipe output to a top-level workspace folder
-          pip wheel . --wheel-dir=..\..\..\dist   --platform win_arm64
+          pip wheel . --wheel-dir=..\..\..\dist   --plat-name  win_arm64
 
           pip install .
       #z3 build end
