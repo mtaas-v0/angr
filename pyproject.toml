@@ -14,17 +14,17 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "cxxheaderparser",
     "GitPython",
     "angr-data~=0.1.0",
-    "archinfo==9.3.1.dev0",
+    "archinfo>=9.3",
     "cachetools",
     "capstone==5.0.6",
     "cffi>=1.14.0",
     "claripy==9.3.1.dev0",
-    "cle==9.3.1.dev0",
+    "cle>=9.3",
     "lmdb==2.1.1",
     "msgspec; implementation_name == 'cpython'",
     "mulpyplexer",
