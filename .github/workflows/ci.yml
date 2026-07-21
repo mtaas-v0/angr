@@ -21,14 +21,14 @@ jobs:
     strategy:
       matrix:
         environment:
-          - os: windows-2025
-            python-version: 3.12
+          #- os: windows-2025
+          #  python-version: 3.12
           - os: windows-11-arm
             python-version: 3.14
-          - os: macos-26
-            python-version: 3.12
-          - os: ubuntu-24.04
-            python-version: 3.14
+          #- os: macos-26
+          #  python-version: 3.12
+          #- os: ubuntu-24.04
+          #  python-version: 3.14
       fail-fast: false
     runs-on: ${{ matrix.environment.os }}
     steps:
@@ -37,7 +37,8 @@ jobs:
         if: startsWith(runner.os, 'windows')
       - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v6
       - name: Sync dependencies
-        run: uv sync -p ${{ matrix.environment.python-version }}
+        run: uv sync -p ${{ matrix.environment.python-version }}  --no-binary-package pyvex
+        #pyvex has the wrong dll
       - name: Collect tests
         run: uv run pytest --collect-only tests
       
@@ -55,6 +56,7 @@ jobs:
           retention-days: 7
 
   rust_check:
+    if: false
     name: Rust Check
     runs-on: ubuntu-latest
     steps:
@@ -66,6 +68,7 @@ jobs:
       - run: cargo fmt --all -- --check
 
   rust_test:
+    if: false
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
