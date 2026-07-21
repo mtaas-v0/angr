@@ -55,10 +55,6 @@ jobs:
       # z3 build
       - name: Checkout Z3 Source Code into Subdirectory
         uses: actions/checkout@v4
-        env:
-          DISTUTILS_USE_SDK: 1
-          MSSdk: 1
-          setuptools_plat_name: "win_arm64"
         with:
           repository: Z3Prover/z3
           ref: master
@@ -92,7 +88,11 @@ jobs:
               exit 1
           }
   
-      - name: Configure MSVC and Compile ARM64 Wheel
+      - name: Configure MSVC and Compile ARM64 Wheel For z3
+        env:
+          DISTUTILS_USE_SDK: 1
+          MSSdk: 1
+          setuptools_plat_name: "win_arm64"
         shell: cmd
         run: |
           :: 1. Force environment paths to utilize cross-compilation toolchains
@@ -106,13 +106,17 @@ jobs:
           cd z3-source\src\api\python
           
           :: 4. Build the wheel and pipe output to a top-level workspace folder
-          pip wheel . --wheel-dir=..\..\..\dist
+          pip wheel . --wheel-dir=..\..\..\dist   --platform win_arm64
 
           pip install .
       #z3 build end
       
       - name: Configure MSVC for Cross-Compilation & Build Wheel For pydemumble
         shell: cmd
+        env:
+          DISTUTILS_USE_SDK: 1
+          MSSdk: 1
+          setuptools_plat_name: "win_arm64"
         run: |
           :: 1. Locate and activate the MSVC x64-to-ARM64 cross-compiler toolchain
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64_arm64
