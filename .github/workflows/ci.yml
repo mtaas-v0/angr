@@ -65,6 +65,7 @@ jobs:
       - name: Install Python Build Dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
+          pip install pip-tools
   
       - name: Patch setup.py inside Subdirectory
         shell: powershell
@@ -139,9 +140,13 @@ jobs:
           
       - name: Filter Packages
         shell: pwsh
+        continue-on-error: true
         run: |
           (Get-Content temp_reqs.txt) -notmatch 'pyvex|z3-solver|pydemumble|pypcode' > temp_reqs_v2.txt
           Get-Content temp_reqs_v2.txt
+          
+          pip-compile temp_reqs_v2.txt -o temp_reqs_v3.txt
+          Get-Content temp_reqs_v3.txt
           
       - name: Install dependencies
         continue-on-error: true
@@ -151,7 +156,7 @@ jobs:
       - name: Compile and Build Package Wheels
         run: |
           # Uses the modern PEP 517 build orchestrator to execute setup.py / pyproject.toml 
-          python -m build --wheel --no-isolation
+          pip wheel . --wheel-dir dist --no-build-isolation
           
           # Optional Legacy fallback line if your repository has no pyproject.toml:
           # python setup.py bdist_wheel
