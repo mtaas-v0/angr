@@ -66,6 +66,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install pip-tools
+          pip install setuptools-rust
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          # Explicitly set the target to Windows on ARM
+          target: aarch64-pc-windows-msvc
+          components: clippy
+  
+      - name: Enable Rust Cache
+        uses: swatinem/rust-cache@v2
+
   
       - name: Patch setup.py inside Subdirectory
         shell: powershell
